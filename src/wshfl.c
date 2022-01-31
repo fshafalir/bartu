@@ -1171,8 +1171,9 @@ int main_wshfl(int argc, char* argv[argc])
 	lsqr_conf.lambda = 0.;
 	lsqr_conf.it_gpu = use_gpu;
 	double recon_start = timestamp();
+	const struct linop_s* linops = NULL;
 	const struct operator_p_s* J = fista ?
-		lsqr2_create(&lsqr_conf, italgo,    iconf,    (const float*) init, A, NULL, nr_penalties, thresh_ops, NULL,   NULL):
+		lsqr2_create(&lsqr_conf, italgo,    iconf,    (const float*) init, A, NULL, nr_penalties, thresh_ops, &linops,   NULL):
 		lsqr2_create(&lsqr_conf, it.italgo, it.iconf, (const float*) init, A, NULL, nr_penalties, thresh_ops, trafos, NULL);
 	operator_p_apply(J, 1., DIMS, coeff_dims, recon, DIMS, table_dims, table);
 	md_zsmul(DIMS, coeff_dims, recon, recon, norm);
