@@ -19,6 +19,8 @@ extern struct linop_s* maps_create(const long max_dims[DIMS],
 			unsigned int sens_flags, const complex float* sens);
 extern struct linop_s* maps2_create(const long coilim_dims[DIMS], const long maps_dims[DIMS], const long img_dims[DIMS], const complex float* maps);
 
+extern struct linop_s* linop_interp_create(const long in_dims[DIMS], const long out_dims[DIMS]);
+
 
 #ifdef __cplusplus
 }

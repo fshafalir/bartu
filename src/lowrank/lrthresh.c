@@ -425,12 +425,12 @@ void add_lrnoiseblk(long* levels, long blkdims[MAX_LEV][DIMS], const long idims[
  *
  * returns number of levels = 1
  */
-long llr_blkdims(long blkdims[MAX_LEV][DIMS], unsigned long flags, const long idims[DIMS], long llrblk)
+long llr_blkdims(long blkdims[MAX_LEV][DIMS], unsigned long flags, const long idims[DIMS], const long llrblk[DIMS])
 {
 	for (unsigned int i = 0; i < DIMS; i++) {
 
 		if (MD_IS_SET(flags, i))
-			blkdims[0][i] = MIN(llrblk, idims[i]);
+			blkdims[0][i] = MIN(llrblk[i], idims[i]);
 		else
 			blkdims[0][i] = idims[i];
 	}

@@ -63,6 +63,7 @@ opt_conv_f opt_vec2;
 opt_conv_f opt_float_vec2;
 opt_conv_f opt_vec3;
 opt_conv_f opt_float_vec3;
+opt_conv_f opt_vec16;
 opt_conv_f opt_float_vec4;
 opt_conv_f opt_select;
 opt_conv_f opt_subopt;
@@ -100,6 +101,9 @@ static const char* opt_arg_str(enum OPT_TYPE type)
 	case OPT_VEC3:
 		return "d:d:d";
 
+	case OPT_VEC16:
+		return "d:d:d:d:d:d:d:d:d:d:d:d:d:d:d:d";
+
 	case OPT_FLOAT_VEC2:
 		return "f:f";
 
@@ -136,6 +140,7 @@ static const char* opt_type_str(enum OPT_TYPE type)
 	OPT_ARG_TYPE_CASE(OPT_CFL)
 	OPT_ARG_TYPE_CASE(OPT_VEC2)
 	OPT_ARG_TYPE_CASE(OPT_VEC3)
+	OPT_ARG_TYPE_CASE(OPT_VEC16)
 	OPT_ARG_TYPE_CASE(OPT_FLOAT_VEC2)
 	OPT_ARG_TYPE_CASE(OPT_FLOAT_VEC3)
         OPT_ARG_TYPE_CASE(OPT_FLOAT_VEC4)
@@ -178,6 +183,8 @@ static bool opt_dispatch(enum OPT_TYPE type, void* ptr, opt_conv_f* conv, char c
 		return opt_vec2(ptr, c, optarg);
 	case OPT_VEC3:
 		return opt_vec3(ptr, c, optarg);
+	case OPT_VEC16:
+		return opt_vec16(ptr, c, optarg);
 	case OPT_FLOAT_VEC2:
 		return opt_float_vec2(ptr, c, optarg);
 	case OPT_FLOAT_VEC3:
@@ -799,6 +806,51 @@ bool opt_vec3(void* ptr, char c, const char* optarg)
 		int r = sscanf(optarg, "%ld:%ld:%ld", &(*(long(*)[3])ptr)[0], &(*(long(*)[3])ptr)[1], &(*(long(*)[3])ptr)[2]);
 
 		assert(3 == r);
+	}
+
+	return false;
+}
+
+
+bool opt_vec16(void* ptr, char c, const char* optarg)
+{
+	if (islower(c)) {
+
+		if (16 != sscanf(optarg, "%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld", 
+			&(*(long(*)[16])ptr)[0], &(*(long(*)[16])ptr)[1], &(*(long(*)[16])ptr)[2], &(*(long(*)[16])ptr)[3], 
+			&(*(long(*)[16])ptr)[4], &(*(long(*)[16])ptr)[5], &(*(long(*)[16])ptr)[6], &(*(long(*)[16])ptr)[7], 
+			&(*(long(*)[16])ptr)[8], &(*(long(*)[16])ptr)[9], &(*(long(*)[16])ptr)[10], &(*(long(*)[16])ptr)[11], 
+			&(*(long(*)[16])ptr)[12], &(*(long(*)[16])ptr)[13], &(*(long(*)[16])ptr)[14], &(*(long(*)[16])ptr)[15])) {
+
+			(*(long(*)[16])ptr)[0] = atol(optarg);
+			(*(long(*)[16])ptr)[1] = atol(optarg);
+			(*(long(*)[16])ptr)[2] = atol(optarg);
+			(*(long(*)[16])ptr)[3] = atol(optarg);
+			(*(long(*)[16])ptr)[4] = atol(optarg);
+			(*(long(*)[16])ptr)[5] = atol(optarg);
+			(*(long(*)[16])ptr)[6] = atol(optarg);
+			(*(long(*)[16])ptr)[7] = atol(optarg);
+			(*(long(*)[16])ptr)[8] = atol(optarg);
+			(*(long(*)[16])ptr)[9] = atol(optarg);
+			(*(long(*)[16])ptr)[10] = atol(optarg);
+			(*(long(*)[16])ptr)[11] = atol(optarg);
+			(*(long(*)[16])ptr)[12] = atol(optarg);
+			(*(long(*)[16])ptr)[13] = atol(optarg);
+			(*(long(*)[16])ptr)[14] = atol(optarg);
+			(*(long(*)[16])ptr)[15] = atol(optarg);
+		}
+
+	} else {
+
+		debug_printf(DP_WARN, "the upper-case options for specifying dimensions are deprecated.\n");
+
+		int r = sscanf(optarg, "%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld:%ld", 
+			&(*(long(*)[16])ptr)[0], &(*(long(*)[16])ptr)[1], &(*(long(*)[16])ptr)[2], &(*(long(*)[16])ptr)[3], 
+			&(*(long(*)[16])ptr)[4], &(*(long(*)[16])ptr)[5], &(*(long(*)[16])ptr)[6], &(*(long(*)[16])ptr)[7], 
+			&(*(long(*)[16])ptr)[8], &(*(long(*)[16])ptr)[9], &(*(long(*)[16])ptr)[10], &(*(long(*)[16])ptr)[11], 
+			&(*(long(*)[16])ptr)[12], &(*(long(*)[16])ptr)[13], &(*(long(*)[16])ptr)[14], &(*(long(*)[16])ptr)[15]);
+
+		assert(16 == r);
 	}
 
 	return false;

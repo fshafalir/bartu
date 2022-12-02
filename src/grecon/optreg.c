@@ -272,7 +272,7 @@ void opt_bpursuit_configure(struct opt_reg_s* ropts, const struct operator_p_s* 
 	ropts->sr++;
 }
 
-void opt_reg_configure(int N, const long img_dims[N], struct opt_reg_s* ropts, const struct operator_p_s* prox_ops[NUM_REGS], const struct linop_s* trafos[NUM_REGS], unsigned int llr_blk, unsigned int shift_mode, const char* wtype_str, bool use_gpu)
+void opt_reg_configure(int N, const long img_dims[N], struct opt_reg_s* ropts, const struct operator_p_s* prox_ops[NUM_REGS], const struct linop_s* trafos[NUM_REGS], const long llr_blk[N], unsigned int shift_mode, const char* wtype_str, bool use_gpu)
 {
 	float lambda = ropts->lambda;
 	bool randshift = (1 == shift_mode);
@@ -507,6 +507,7 @@ void opt_reg_configure(int N, const long img_dims[N], struct opt_reg_s* ropts, c
 
 			// add locally lowrank penalty
 			levels = llr_blkdims(blkdims, regs[nr].jflags, img_dims, llr_blk);
+			debug_print_dims(DP_DEBUG3, DIMS, blkdims);
 
 			assert(1 == levels);
 

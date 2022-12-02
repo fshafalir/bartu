@@ -25,7 +25,7 @@ extern float lrnucnorm(const struct operator_p_s* op, const complex float* src);
 extern long multilr_blkdims(long blkdims[MAX_LEV][DIMS], unsigned long flags, const long dims[DIMS], int blkskip, long initblk);
 
 // Generates locally low rank block size
-extern long llr_blkdims(long blkdims[MAX_LEV][DIMS], unsigned long flags, const long dims[DIMS], long llrblk);
+extern long llr_blkdims(long blkdims[MAX_LEV][DIMS], unsigned long flags, const long dims[DIMS], const long llrblk[DIMS]);
 
 // Generates low rank plus sparse block size
 extern long ls_blkdims(long blkdims[MAX_LEV][DIMS], const long dims[DIMS]);

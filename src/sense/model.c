@@ -303,5 +303,27 @@ struct linop_s* sense_init(const long max_dims[DIMS],
 	return sense_op;
 }
 
+struct linop_s* linop_interp_create(const long in_dims[DIMS], const long out_dims[DIMS])
+{
+
+	debug_print_dims(DP_INFO, DIMS, in_dims);
+	debug_print_dims(DP_INFO, DIMS, out_dims);
+	
+	struct linop_s* linop_result = linop_fftc_create(DIMS, in_dims, TIME_FLAG);
+
+	struct linop_s* linop_resizec = linop_resize_center_create(DIMS, out_dims, in_dims);
+		
+	linop_result = linop_chain(linop_result, linop_resizec);
+
+	struct linop_s* linop_ifftc = linop_ifftc_create(DIMS, out_dims, TIME_FLAG);
+
+	linop_result = linop_chain(linop_result, linop_ifftc);
+	
+	linop_free(linop_resizec);
+	linop_free(linop_ifftc);
+	
+	return linop_result;
+}
+
 
 

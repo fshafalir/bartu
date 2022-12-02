@@ -260,7 +260,9 @@ int main_pics(int argc, char* argv[argc])
         // Simultaneous Multi-Slice
         bool sms = false;
 
-	unsigned int llr_blk = 8;
+	// unsigned int llr_blk = 8;
+	long llr_blk[DIMS] = {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8};
+	unsigned int interp_time_dim = 0;
 	const char* wtype_str = "dau2";
 
 	const char* image_truth_file = NULL;
@@ -303,7 +305,7 @@ int main_pics(int argc, char* argv[argc])
 		OPT_INT('G', &gpun, "gpun", "use GPU device gpun"),
 		OPT_INFILE('p', &pat_file, "file", "pattern or weights"),
 		OPT_SELECT('I', enum algo_t, &algo, ALGO_IST, "select IST"),
-		OPT_UINT('b', &llr_blk, "blk", "Lowrank block size"),
+		OPT_VEC16('b', &llr_blk, "blk", "Lowrank block size"),
 		OPT_SET('e', &eigen, "Scale stepsize based on max. eigenvalue"),
 		OPT_SET('H', &hogwild, "(hogwild)"),
 		OPT_SET('D', &admm.dynamic_rho, "(ADMM dynamic step size)"),
@@ -312,6 +314,7 @@ int main_pics(int argc, char* argv[argc])
 		OPT_INFILE('T', &image_truth_file, "file", "(truth file)"),
 		OPT_INFILE('W', &image_start_file, "<img>", "Warm start with <img>"),
 		OPT_INT('d', &debug_level, "level", "Debug level"),
+		OPT_INT('Z', &interp_time_dim, "dim", "Time intepolation dimension"),
 		OPT_INT('O', &conf.rwiter, "rwiter", "(reweighting)"),
 		OPT_FLOAT('o', &conf.gamma, "gamma", "(reweighting)"),
 		OPT_FLOAT('u', &admm.rho, "rho", "ADMM rho"),
@@ -569,7 +572,18 @@ int main_pics(int argc, char* argv[argc])
 
 	if (NULL == traj_file) {
 
+		if (0u != interp_time_dim) {
+			max_dims[TIME_DIM] = interp_time_dim;
+			img_dims[TIME_DIM] = interp_time_dim;
+			debug_print_dims(DP_INFO, DIMS, max_dims);
+		}
+
 		forward_op = sense_init(max_dims, map_flags, maps);
+
+		if (0u != interp_time_dim) {
+			const struct linop_s* interp_time_op = linop_interp_create(max_dims, ksp_dims);
+			forward_op = linop_chain_FF(forward_op, interp_time_op);
+		}
 
 		// apply temporal basis
 
